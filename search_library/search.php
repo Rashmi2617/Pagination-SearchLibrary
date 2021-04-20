@@ -69,7 +69,8 @@ class searching
 
         $pattern_email= "/\b[-0-9a-zA-Z.+_]+@[-0-9a-zA-Z.+_]+.[a-zA-Z]{2,4}\b/";
         if(preg_match_all($pattern_email, $input_new, $output) )
-        {
+        {   
+            $query_type='email';
             $email=$output[0][0];    
         }
         $input_new= preg_replace('/\b[\d]+\b/', '', $input_new); 
@@ -115,9 +116,9 @@ class searching
             }
             if(!empty($data['email']))
             {
-                if ($value_q['type']=='email') 
+                if ($query_type=='email') 
                 {   
-                    $query='SELECT '.$value_q['get_colms'].' FROM '.$value_q['table_name'].' WHERE '.$value_q['search_col_name'].'="'.$email.'"';
+                    $query='SELECT '.$value_q['get_colms'].' FROM '.$value_q['table_name'].' WHERE '.$value_q['email_col'].'="'.$email.'"';
                     array_push($query_array, $query);
                     array_push($get_ids,$value_q['get_id']); 
                 }
@@ -133,7 +134,6 @@ class searching
     }
     function searching_data($ids_of_string)
     {   
-        
         $Date1='';
         $month='';
         $year='';
