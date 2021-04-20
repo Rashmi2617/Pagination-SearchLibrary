@@ -1,9 +1,12 @@
 <?php
 
-	require_once('/Applications/MAMP/htdocs/Mock_test_1/search_library/search.php');
+	// require_once('/Applications/MAMP/htdocs/Mock_test_1/search_library/search.php');
 
-	require_once('/Applications/MAMP/htdocs/Mock_test_1/pagination1.0/prepared_query.php');
+	// require_once('/Applications/MAMP/htdocs/Mock_test_1/pagination1.0/prepared_query.php');
 
+	require_once('../search_library/search.php');
+
+	require_once('../pagination1.0/prepared_query.php');
 
 	$application_obj = new ManageApp();
 
@@ -43,8 +46,8 @@
 	    $max_page=0;
 	    $response_data=array();
 	    $obj=new searching($input,$connection_mock_chat);
-	    $keys=array('type','table_name','search_col_name','get_colms','get_id');
-	    $value=array(array('string','login_db.mock_test_tbl','name','null as name,id,null as email,null as phone,null as gender','id'));
+	    $keys=array('type','table_name','search_col_name','get_colms','get_id','email_col');
+	    $value=array(array('string','mock_test_tbl','Name','Name as name,Id,Email as email,Phone as phone,Gender as gender','Id','Email'));
 	    $query_data=array();
 
 	    foreach ($value as $key => $value1) 
@@ -65,8 +68,8 @@
 	   
 	    $where_data=$obj->searching_data($get_ids);
 
-	    $table_from=array("table_name_id","table_name_email");
-	    $table1_to=array("login_db.mock_test_tbl","login_db.mock_test_tbl");
+	    $table_from=array("table_name_Id","table_name_Email");
+	    $table1_to=array("mock_test_tbl","mock_test_tbl");
 	    $tble1=str_replace($table_from, $table1_to, $where_data);
 
 	    if($tble1=='')
@@ -97,7 +100,8 @@
 
 	        $user='root';
 
-			$connection= mysqli_connect ($host, $user, "root" , $db); 
+			// $connection= mysqli_connect ($host, $user, "root" , $db); 
+			$connection= mysqli_connect ($host, $user, "alpha123" , $db); 
 			if (!$connection) 
 			{
 				die ( "no connection found" . mysqli_error($connection));
@@ -177,6 +181,9 @@
 		    $params=array();
 		    $max_page='';
 		    $query="SELECT COUNT(*)as total_row FROM mock_test_tbl WHERE ".$where;
+
+		    // echo json_encode($query);
+
 	        $total_row= mysqli_prepared_query($connection_mock_chat,$query,"",$params);
 	        $total_length=$total_row[0]['total_row'];
 	        $max_page=ceil($total_length/$data_per_page);
@@ -193,15 +200,16 @@
 		                $res_here=$val;
 		                $res_here['max_page']=$max_page;
 		                $res_here['total_length'] =$total_length;
-		                $Name=$val['name'];
-		                $Email=$val['email'];
-		                $phoneNum=$val['phone'];
-		                $Gender=$val['gender'];
+		                $Name=$val['Name'];
+		                $Email=$val['Email'];
+		                $phoneNum=$val['Phone'];
+		                $Gender=$val['Gender'];
 		                $res_here['name']=$Name;
 		                $res_here['email']=$Email;
 		                $res_here['phoneNum']=$phoneNum;
 		                $res_here['gender']=$Gender;
 		                $response[]=$res_here;   
+
 		            }
 		        } 
 		        return $response;
